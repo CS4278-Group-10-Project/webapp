@@ -8,31 +8,74 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-
+  id        String   @id @default(cuid())
+  email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password Password?
-  notes    Note[]
+  first_name  String
+  last_name   String
+  profile_pic String?
+  bio         String  @default("")
+
+  enrolled_courses  Course[] @relation("Enrolled")
+  completed_courses Course[] @relation("Completed")
+
+  badgesCreated Badge[] @relation("Created")
+  badgesEarned  Badge[] @relation("Earned")
+
+  program     Program          @relation(fields: [programId], references: [id])
+  programId   Int
+  standindg   StudentStanding?
+  accountType UserType         @default(STUDENT)
+
+  passwordHash String?
 }
 
-model Password {
-  hash String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+enum StudentStanding {
+  FRESHMAN
+  SOPHOMORE
+  JUNIOR
+  SENIOR
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
+enum UserType {
+  STUDENT
+  PROFESSOR
+  ADMIN
+}
 
+model Program {
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  User User[]
+}
+
+model Badge {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  picture_url String
+  description String
+
+  users User[] @relation("Earned")
+
+  created_by  User   @relation(name: "Created", fields: [createdById], references: [id])
+  createdById String
+}
+
+model Course {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+
+  enrolled_users  User[] @relation("Enrolled")
+  completed_users User[] @relation("Completed")
 }
