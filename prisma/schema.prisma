@@ -20,6 +20,7 @@ model User {
 
   enrolled_courses  Course[] @relation("Enrolled")
   completed_courses Course[] @relation("Completed")
+  courses_taught    Course[] @relation("Taught")
 
   badgesCreated Badge[] @relation("Created")
   badgesEarned  Badge[] @relation("Earned")
@@ -50,7 +51,11 @@ model Program {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User User[]
+  name        String
+  description String
+
+  users   User[]
+  courses Course[]
 }
 
 model Badge {
@@ -73,9 +78,27 @@ model Course {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  name             String
+  description      String
+  course_code      String
+  needsHoursLogged Boolean
+
+  professor   User   @relation(name: "Taught", fields: [professorId], references: [id])
+  professorId String
+
+  enrolled_users  User[]       @relation("Enrolled")
+  completed_users User[]       @relation("Completed")
+  programs        Program[]
+  competencies    Competency[]
+}
+
+model Competency {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   name        String
   description String
 
-  enrolled_users  User[] @relation("Enrolled")
-  completed_users User[] @relation("Completed")
+  courses Course[]
 }
