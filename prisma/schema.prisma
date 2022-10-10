@@ -18,9 +18,14 @@ model User {
   profile_pic String?
   bio         String  @default("")
 
-  enrolled_courses  Course[] @relation("Enrolled")
-  completed_courses Course[] @relation("Completed")
-  courses_taught    Course[] @relation("Taught")
+  passwordHash String?
+
+  enrolled_courses     Course[]   @relation("Enrolled")
+  completed_courses    Course[]   @relation("Completed")
+  courses_taught       Course[]   @relation("Taught")
+  activities_completed Activity[]
+
+  hours_completed HoursLog[]
 
   badgesCreated Badge[] @relation("Created")
   badgesEarned  Badge[] @relation("Earned")
@@ -29,8 +34,6 @@ model User {
   programId   Int
   standindg   StudentStanding?
   accountType UserType         @default(STUDENT)
-
-  passwordHash String?
 }
 
 enum StudentStanding {
@@ -86,10 +89,11 @@ model Course {
   professor   User   @relation(name: "Taught", fields: [professorId], references: [id])
   professorId String
 
-  enrolled_users  User[]       @relation("Enrolled")
-  completed_users User[]       @relation("Completed")
-  programs        Program[]
-  competencies    Competency[]
+  enrolledUsers  User[]       @relation("Enrolled")
+  completedUsers User[]       @relation("Completed")
+  programs       Program[]
+  competencies   Competency[]
+  hoursLogged    HoursLog[]
 }
 
 model Competency {
@@ -100,5 +104,34 @@ model Competency {
   name        String
   description String
 
-  courses Course[]
+  courses    Course[]
+  activities Activity[]
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name         String
+  description  String
+  competencies Competency[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+model HoursLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  start   DateTime
+  end     DateTime
+  comment String
+
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
 }
