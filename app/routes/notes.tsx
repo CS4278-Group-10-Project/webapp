@@ -4,7 +4,6 @@ import { Form, Link, Outlet } from "@remix-run/react";
 
 import { getNoteListItems } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
-import Sidebar from "./components/sidebar";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -13,7 +12,6 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function NotesPage() {
-
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
@@ -31,9 +29,7 @@ export default function NotesPage() {
       </header>
 
       <main className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50">
-          <Sidebar />
-        </div>
+        <div className="h-full w-80 border-r bg-gray-50"></div>
 
         <div className="flex-1 p-6">
           <Outlet />
