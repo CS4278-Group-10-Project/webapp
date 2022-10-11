@@ -13,7 +13,6 @@ export default function UserInfo() {
         </p>
       </div>
       <hr className="w-50 my-4 mx-auto h-1 border-0 bg-white dark:bg-gray-700 md:my-10"></hr>
-      ;
     </Box>
   );
 }
