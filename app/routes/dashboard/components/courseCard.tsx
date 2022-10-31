@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useState } from "react";
+import LogHours from "./logHours";
 
 export default function CourseCard({ course }: { course: string }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,19 +30,15 @@ export default function CourseCard({ course }: { course: string }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Course name</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            <LogHours />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setModalOpen(false)}>Disagree</Button>
           <Button onClick={() => setModalOpen(false)} autoFocus>
-            Agree
+            Close
           </Button>
         </DialogActions>
       </Dialog>
