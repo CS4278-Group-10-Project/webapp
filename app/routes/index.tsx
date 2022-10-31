@@ -1,4 +1,5 @@
-import { Link, Form } from "@remix-run/react";
+import { Link } from "@remix-run/react";
+import { Paper } from "@mui/material";
 
 import { useOptionalUser } from "~/utils";
 
@@ -6,24 +7,21 @@ export default function Index() {
   const user = useOptionalUser();
   return (
     <main>
-      <div className="relative sm:pb-16 sm:pt-8">
-        <div className="mx-auto w-full sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
-            <div className="absolute inset-0">
-              <img
-                className="h-full w-full object-cover"
-                src="https://news.vanderbilt.edu/files/20211129_Informatics3_840x600.jpeg"
-                alt="VUSN landing page background"
-              />
-              <div className="absolute inset-0 bg-[color:rgba(27,167,254,0.5)] mix-blend-multiply" />
-            </div>
+      <div className="relative h-full">
+        <div className="mx-auto w-full">
+          <div className="sm:overflow-hidden">
+            <img
+              className="absolute inset-0 w-full object-cover"
+              src="https://news.vanderbilt.edu/files/20211129_Informatics3_840x600.jpeg"
+              alt="VUSN landing page background"
+            />
             <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pb-20 lg:pt-32">
               <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="text- block uppercase drop-shadow-md">
+                <span className="text-block uppercase drop-shadow-md">
                   VUSN
                 </span>
               </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-black sm:max-w-3xl">
+              <p className="mx-auto mt-6 max-w-lg text-center text-xl font-bold text-black sm:max-w-3xl">
                 Gamified platform for VUSN students to maintain their progress
               </p>
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
