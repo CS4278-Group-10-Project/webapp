@@ -88,3 +88,17 @@ export async function verifyLogin(
 
   return userWithoutPassword;
 }
+
+export async function getProfessorStudents(professorId: User["id"]) {
+  // request students who are taking courses taught by this professor
+  const students = await prisma.user.findMany({
+    where: {
+      enrolledCourses: {
+        some: {
+          professorId,
+        },
+      },
+    },
+  });
+  return students;
+}

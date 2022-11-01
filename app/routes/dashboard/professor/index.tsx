@@ -4,6 +4,12 @@ import Overview from "./components/overview";
 import UserInfo from "../components/userinfo";
 import EnrolledStudent from "./components/enrolledStudent";
 import { Box } from "@mui/material";
+import { json, LoaderArgs, redirect } from "@remix-run/node";
+import { getFullProfessorUser } from "~/session.server";
+import { UserType, User, Course } from "@prisma/client";
+import { useLoaderData } from "@remix-run/react";
+import { getProfessorStudents } from "~/models/user.server";
+
 const students = [
   {
     first_name: "Ujjwal",
@@ -63,7 +69,29 @@ const students = [
   },
 ];
 
-function ProfessorDashboardContent() {
+export async function loader({ request }: LoaderArgs) {
+  const user = await getFullProfessorUser(request);
+  if (!user) {
+    return redirect("/login");
+  }
+
+  const students = await getProfessorStudents(user.id);
+
+  console.log({ students });
+
+  if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
+  return json({ user, students });
+}
+
+function ProfessorDashboardContent({
+  user,
+  students,
+}: {
+  user: User & {
+    coursesTaught: Course[];
+  };
+  students: User[];
+}) {
   return (
     <Box
       style={{
@@ -72,8 +100,9 @@ function ProfessorDashboardContent() {
       gap={5}
     >
       <CourseList
-        title={"Current Courses"}
-        courses={["Introduction to Nursing", "CPR Practicum", "Nursing "]}
+        title={"Current Courses Taught"}
+        courses={user.coursesTaught}
+        isProfessor={true}
       />
 
       <EnrolledStudent studentList={students} />
@@ -82,10 +111,11 @@ function ProfessorDashboardContent() {
 }
 
 export default function ProfessorDashboard() {
+  const { user, students } = useLoaderData();
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
-      <Sidebar UserInfo={UserInfo} List={Overview} />
-      <ProfessorDashboardContent />
+      <Sidebar userInfo={<UserInfo user={user} />} List={<Overview />} />
+      <ProfessorDashboardContent user={user} students={students} />
     </main>
   );
 }

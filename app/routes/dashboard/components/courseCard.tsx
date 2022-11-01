@@ -7,10 +7,18 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { Course } from "@prisma/client";
 import { useState } from "react";
 import LogHours from "./logHours";
+import ProfessorCourse from "./professorCourse";
 
-export default function CourseCard({ course }: { course: string }) {
+export default function CourseCard({
+  course,
+  isProfessor,
+}: {
+  course: Course;
+  isProfessor?: boolean;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -20,7 +28,7 @@ export default function CourseCard({ course }: { course: string }) {
         onClick={() => setModalOpen(true)}
       >
         <Box className="text-1xl flex h-full w-full items-center justify-center font-medium">
-          {course}
+          {course.name}
         </Box>
       </Box>
 
@@ -30,10 +38,10 @@ export default function CourseCard({ course }: { course: string }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Course name</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{course.name}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <LogHours />
+            {isProfessor ? <ProfessorCourse course={course} /> : <LogHours />}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ClickAwayListener } from "@mui/base";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export default function Sidebar({ UserInfo, List }: any) {
+export default function Sidebar({ userInfo, list }: any) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <>
@@ -23,8 +23,8 @@ export default function Sidebar({ UserInfo, List }: any) {
         onBackdropClick={() => setDrawerOpen(false)}
       >
         <div className="h-full overflow-y-auto bg-black py-4 px-3 dark:bg-gray-800">
-          <UserInfo />
-          <List />
+          {userInfo}
+          {list}
         </div>
       </Drawer>
     </>
