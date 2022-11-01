@@ -7,10 +7,11 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { Course } from "@prisma/client";
 import { useState } from "react";
 import LogHours from "./logHours";
 
-export default function CourseCard({ course }: { course: string }) {
+export default function CourseCard({ course }: { course: Course }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -20,7 +21,7 @@ export default function CourseCard({ course }: { course: string }) {
         onClick={() => setModalOpen(true)}
       >
         <Box className="text-1xl flex h-full w-full items-center justify-center font-medium">
-          {course}
+          {course.name}
         </Box>
       </Box>
 

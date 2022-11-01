@@ -1,11 +1,16 @@
 import { Box } from "@mui/material";
+import { User, UserType } from "@prisma/client";
+import Gravatar from "react-gravatar";
 
-export default function UserInfo() {
+export default function UserInfo({ user }: { user: User }) {
   return (
     <Box>
       <h1 className="fon.t-bold mt-0 mb-2 text-2xl leading-tight text-white">
-        Cornelia Vanderbilt
+        {user.firstName} {user.lastName}
       </h1>
+
+      <Gravatar email={user.email} size={200} />
+
       <div className="columns-2 gap-5 overflow-y-auto">
         <p className="text-1xl mt-0 mb-2 font-light text-white">
           25% Graduation Requirements Met

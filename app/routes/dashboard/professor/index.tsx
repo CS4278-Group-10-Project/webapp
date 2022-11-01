@@ -4,6 +4,7 @@ import Overview from "./components/overview";
 import UserInfo from "../components/userinfo";
 import EnrolledStudent from "./components/enrolledStudent";
 import { Box } from "@mui/material";
+import { LoaderArgs, redirect } from "@remix-run/node";
 const students = [
   {
     first_name: "Ujjwal",
@@ -63,6 +64,16 @@ const students = [
   },
 ];
 
+export async function loader({ request }: LoaderArgs) {
+  const user = await getFullStudentUser(request);
+  if (!user) {
+    return redirect("/login");
+  }
+
+  if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
+  return json(user);
+}
+
 function ProfessorDashboardContent() {
   return (
     <Box
@@ -84,7 +95,7 @@ function ProfessorDashboardContent() {
 export default function ProfessorDashboard() {
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
-      <Sidebar UserInfo={UserInfo} List={Overview} />
+      <Sidebar userInfo={UserInfo} List={Overview} />
       <ProfessorDashboardContent />
     </main>
   );

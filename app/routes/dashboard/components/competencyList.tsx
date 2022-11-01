@@ -1,6 +1,12 @@
 import { Box } from "@mui/material";
+import { Competency } from "@prisma/client";
 
-export default function CompetencyList() {
+export default function CompetencyList({
+  competencies,
+}: {
+  competencies: Competency[];
+}) {
+  console.log({ competencies });
   return (
     <Box>
       <h1 className="text-1xl mt-0 mb-2 font-medium leading-tight text-white">
