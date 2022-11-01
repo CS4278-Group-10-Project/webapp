@@ -1,5 +1,7 @@
 import CourseList from "./components/courseList";
 import Sidebar from "./components/sidebar";
+import CompetencyList from "./components/competencyList";
+import UserInfo from "./components/userinfo";
 
 function DashboardContent() {
   return (
@@ -25,7 +27,7 @@ function DashboardContent() {
 export default function Dashboard() {
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
-      <Sidebar />
+      <Sidebar UserInfo={UserInfo} List={CompetencyList} />
       <DashboardContent />
     </main>
   );

@@ -2,10 +2,8 @@ import { Box, Drawer } from "@mui/material";
 import { useState } from "react";
 import { ClickAwayListener } from "@mui/base";
 import MenuIcon from "@mui/icons-material/Menu";
-import CompetencyList from "./competencyList";
-import UserInfo from "./userinfo";
 
-export default function Sidebar() {
+export default function Sidebar({ UserInfo, List }: any) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <>
@@ -26,7 +24,7 @@ export default function Sidebar() {
       >
         <div className="h-full overflow-y-auto bg-black py-4 px-3 dark:bg-gray-800">
           <UserInfo />
-          <CompetencyList />
+          <List />
         </div>
       </Drawer>
     </>
