@@ -2,6 +2,9 @@ import CourseList from "./components/courseList";
 import Sidebar from "./components/sidebar";
 import CompetencyList from "./components/competencyList";
 import UserInfo from "./components/userinfo";
+import { getUser, getUserId } from "~/session.server";
+import { UserType } from ".prisma/client";
+import { json, LoaderArgs, redirect } from "@remix-run/node";
 
 function DashboardContent() {
   return (
@@ -22,6 +25,18 @@ function DashboardContent() {
       />
     </div>
   );
+}
+
+export async function loader({ request }: LoaderArgs) {
+  const user = await getUser(request);
+
+  if (!user) {
+    return redirect("/login");
+  }
+
+  if (user.accountType === UserType.PROFESSOR)
+    return redirect("/dashboard/professor");
+  return json({});
 }
 
 export default function Dashboard() {
