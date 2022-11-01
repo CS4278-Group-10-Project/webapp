@@ -22,9 +22,9 @@ export default function CourseCard({
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <>
+    <Box>
       <Box
-        className="relative h-32 w-48 cursor-pointer rounded-lg bg-gray-300 shadow"
+        className="relative h-32  cursor-pointer rounded-lg bg-gray-300 shadow"
         onClick={() => setModalOpen(true)}
       >
         <Box className="text-1xl flex h-full w-full items-center justify-center font-medium">
@@ -54,6 +54,6 @@ export default function CourseCard({
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Box>
   );
 }

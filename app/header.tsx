@@ -29,6 +29,12 @@ export default function Header() {
                 sx={{ display: { xs: "none", sm: "block" } }}
                 marginRight={2}
               >
+                <Link href="/dashboard/enrollCourses">Course List</Link>
+              </Box>
+              <Box
+                sx={{ display: { xs: "none", sm: "block" } }}
+                marginRight={2}
+              >
                 <Link href="/dashboard">Dashboard</Link>
               </Box>
               <Box sx={{ display: { xs: "none", sm: "block" } }}>
