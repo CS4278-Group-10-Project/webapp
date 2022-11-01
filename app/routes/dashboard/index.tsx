@@ -7,16 +7,16 @@ function DashboardContent() {
       <CourseList
         title={"Current Courses"}
         courses={[
-          "Vikash Singh",
-          "Saydolim Natural",
-          "Ujjwal Nenatural",
-          "Ilyas Johnson",
+          "Nursing 101",
+          "Introduction to CPR",
+          "Nursing 102",
+          "Data Analytics in Nursing",
         ]}
       />
 
       <CourseList
         title={"Completed Courses"}
-        courses={["Tatar Ozbakov", "Cigarretes in Balenciaga"]}
+        courses={["Nursing 100", "Data Visualization"]}
       />
     </div>
   );
