@@ -38,21 +38,12 @@ import { createUser, getUserByEmail } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
 import { capitalize, safeRedirect, validateEmail } from "~/utils";
 import { ToastContainer, toast } from "react-toastify";
-import styles from "../styles/toastify.css";
 
 export const meta: MetaFunction = () => {
   return {
     title: "Register",
   };
 };
-export function links() {
-  return [
-    {
-      rel: "stylesheet",
-      href: styles,
-    },
-  ];
-}
 
 export async function loader({ request }: LoaderArgs) {
   // if logged in redirect

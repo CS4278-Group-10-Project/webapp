@@ -41,7 +41,11 @@ export default function CourseCard({
         <DialogTitle id="alert-dialog-title">{course.name}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {isProfessor ? <ProfessorCourse course={course} /> : <LogHours />}
+            {isProfessor ? (
+              <ProfessorCourse course={course} />
+            ) : (
+              <LogHours course={course} />
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

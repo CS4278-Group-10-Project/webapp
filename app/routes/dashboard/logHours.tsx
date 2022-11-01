@@ -10,14 +10,16 @@ export async function action({ request }: ActionArgs) {
   const start_time = formData.get("start_time");
   const end_time = formData.get("end_time");
   const comment = formData.get("comment");
-  const courseId = "e4dTTXZQZQ";
+  const courseId = formData.get("courseId") as string;
   console.log({ userId, start_time, end_time, comment, courseId });
 
-  return await logHours({
+  await logHours({
     start: new Date(start_time as string),
     end: new Date(end_time as string),
     comment: comment as string,
     courseId,
     userId: userId as string,
   });
+
+  return redirect(`/dashboard`);
 }
