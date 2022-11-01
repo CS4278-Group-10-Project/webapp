@@ -60,7 +60,11 @@ export async function getFullStudentUser(request: Request) {
       },
     },
     activitiesCompleted: true,
-    hoursCompleted: true,
+    hoursCompleted: {
+      include: {
+        course: true,
+      },
+    },
   });
   if (user) return user;
 
