@@ -28,10 +28,10 @@ model User {
   badgesCreated Badge[] @relation("Created")
   badgesEarned  Badge[] @relation("Earned")
 
-  program     Program          @relation(fields: [programId], references: [id])
+  program     Program         @relation(fields: [programId], references: [id])
   programId   Int
-  standing    StudentStanding?
-  accountType UserType         @default(STUDENT)
+  standing    StudentStanding @default(FRESHMAN)
+  accountType UserType        @default(STUDENT)
   password    Password[]
 }
 

@@ -20,13 +20,14 @@ export async function createUser({
   lastName,
   bio,
   programId,
+  standing,
 }: {
   email: User["email"];
   password: string;
   firstName: User["firstName"];
   lastName: User["lastName"];
   bio: User["bio"];
-  programId: User["programId"] || string;
+  programId: User["programId"] | string;
   standing: StudentStanding;
 }) {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,7 +44,7 @@ export async function createUser({
       lastName,
       bio,
       programId: parseInt(programId),
-      standing
+      standing,
     },
   });
 }
