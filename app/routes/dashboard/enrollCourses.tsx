@@ -4,7 +4,7 @@ import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { getAllCourses } from "~/models/course.server";
 import CourseCard from "./components/courseCard";
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { enroll } from "~/models/enroll.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -52,6 +52,7 @@ function EnrollCourseContent({ course }: { course: any }) {
       {course.completed ? (
         <Button
           disabled
+          variant="contained"
           className="mt-2 w-full transform rounded-md bg-gray-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
         >
           Already Completed
@@ -59,6 +60,7 @@ function EnrollCourseContent({ course }: { course: any }) {
       ) : course.enrolled ? (
         <Button
           type="submit"
+          variant="contained"
           className="mt-2 w-full transform rounded-md bg-gray-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
         >
           Unenroll
@@ -66,6 +68,7 @@ function EnrollCourseContent({ course }: { course: any }) {
       ) : (
         <Button
           type="submit"
+          variant="contained"
           className="mt-2 w-full transform rounded-md bg-blue-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-blue-600 focus:bg-blue-600 focus:outline-none"
         >
           Enroll
@@ -80,9 +83,13 @@ export default function EnrollStudents() {
 
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
-      {courses.map((course: any, key: any) => (
-        <EnrollCourseContent course={course} key={key} />
-      ))}
+      <Grid container spacing={1} mt={3}>
+        {courses.map((course: any, key: any) => (
+          <Grid item xs={3} key={key}>
+            <EnrollCourseContent course={course} key={key} />
+          </Grid>
+        ))}
+      </Grid>
     </main>
   );
 }
