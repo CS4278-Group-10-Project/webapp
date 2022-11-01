@@ -3,7 +3,6 @@ import { Box } from "@mui/material";
 export default function UserInfo() {
   return (
     <Box>
-      {" "}
       <h1 className="fon.t-bold mt-0 mb-2 text-2xl leading-tight text-white">
         Cornelia Vanderbilt
       </h1>

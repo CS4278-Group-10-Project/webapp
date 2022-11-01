@@ -55,6 +55,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-gravatar": "^2.6.3",
+<<<<<<< HEAD
+=======
+    "react-toastify": "^9.0.8",
+>>>>>>> main
     "remix-auth": "^3.3.0",
     "remix-auth-form": "^1.2.0",
     "styled-components": "^5.3.6",

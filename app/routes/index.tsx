@@ -1,6 +1,5 @@
-import { Link } from "@remix-run/react";
-import { Paper } from "@mui/material";
-
+import { Form, Link } from "@remix-run/react";
+import { logout } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export default function Index() {
@@ -26,16 +25,33 @@ export default function Index() {
               </p>
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {user ? (
-                  <Link
-                    to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
+                  <div
+                    style={{ marginLeft: "32%" }}
+                    className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0"
                   >
-                    View Notes for {user.email}
-                  </Link>
+                    <Link
+                      to={
+                        user.accountType === "STUDENT"
+                          ? "/dashboard"
+                          : "/professor"
+                      }
+                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
+                    >
+                      Go to Dashboard for {user.email}
+                    </Link>
+                    <Form action="/logout" method="post">
+                      <button
+                        type="submit"
+                        className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
+                      >
+                        Logout
+                      </button>
+                    </Form>
+                  </div>
                 ) : (
                   <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
                     <Link
-                      to="/join"
+                      to="/register"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
                     >
                       Sign up
