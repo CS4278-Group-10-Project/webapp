@@ -70,44 +70,6 @@ export default function CompetencyList({
             <span className="ml-3 flex-1 whitespace-nowrap">Python</span>
           </a>
         </li>
-        <li>
-          <a
-            href="#"
-            className="flex items-center rounded-lg p-2 text-base font-normal text-white hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-gray-700"
-          >
-            <input
-              id="checkbox-6"
-              type="checkbox"
-              value=""
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-            ></input>
-            <label
-              htmlFor="checkbox-6"
-              className="ml-3 flex-1 whitespace-nowrap"
-            >
-              Music
-            </label>
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className="flex items-center rounded-lg p-2 text-base font-normal text-white hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-gray-700"
-          >
-            <input
-              id="checkbox-7"
-              type="checkbox"
-              value=""
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-            ></input>
-            <label
-              htmlFor="checkbox-7"
-              className="ml-3 flex-1 whitespace-nowrap"
-            >
-              Technical Writing
-            </label>
-          </a>
-        </li>
       </ul>
     </Box>
   );

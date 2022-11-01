@@ -3,6 +3,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import StudentList from "./components/studentList";
 import BadgeList from "./components/badgeList";
 import { Form } from "@remix-run/react";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function LogHours() {
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -20,6 +21,7 @@ export default function LogHours() {
     event.preventDefault();
     //api request...
     console.log(selectedStudents, selectedBadges);
+    toast.success("Badge successfully assigned!");
   };
 
   return (
@@ -60,6 +62,18 @@ export default function LogHours() {
           </Button>
         </Form>
       </Paper>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Box>
   );
 }

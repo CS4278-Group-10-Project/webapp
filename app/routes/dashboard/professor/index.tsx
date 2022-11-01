@@ -114,7 +114,7 @@ export default function ProfessorDashboard() {
   const { user, students } = useLoaderData();
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
-      <Sidebar userInfo={<UserInfo user={user} />} List={<Overview />} />
+      <Sidebar userInfo={<UserInfo user={user} />} list={<Overview />} />
       <ProfessorDashboardContent user={user} students={students} />
     </main>
   );

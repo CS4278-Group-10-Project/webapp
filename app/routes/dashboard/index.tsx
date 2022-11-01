@@ -121,6 +121,8 @@ export default function Dashboard() {
     .map((course: any) => course.competencies)
     .filter((comp: any[]) => comp.length > 0);
 
+  console.log({ user });
+
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
       <Sidebar
