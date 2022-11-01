@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-  Avatar,
   Box,
   Stack,
   Table,
@@ -11,6 +10,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+
+import Gravatar from "react-gravatar";
 
 export default function EnrolledStudent({ studentList }: any) {
   return (
@@ -53,10 +54,10 @@ export default function EnrolledStudent({ studentList }: any) {
                   <TableCell align="right">{student.last_name}</TableCell>
                   <TableCell align="right">{student.email}</TableCell>
                   <TableCell align="right">
-                    <Avatar
+                    <Gravatar
                       alt="profile-pic"
-                      src={student.profile_pic}
-                    ></Avatar>
+                      email={student.email}
+                    ></Gravatar>
                   </TableCell>
                 </TableRow>
               ))}
