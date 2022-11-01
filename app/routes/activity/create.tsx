@@ -1,6 +1,7 @@
 import { Form } from "@remix-run/react";
 import React, { useState } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   Paper,
@@ -9,16 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { getUserId } from "~/session.server";
-import {
-  ActionArgs,
-  json,
-  LoaderArgs,
-  NodeOnDiskFile,
-  redirect,
-  unstable_createFileUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
-import { createBadge } from "~/models/badge.server";
+import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await getUserId(request);
@@ -34,16 +26,30 @@ export async function action({ request }: ActionArgs) {
   const description = formData.get("description");
   console.log({ name, description, userId });
 
-  const badge = await createBadge({
-    name,
-    description,
-    pictureUrl: "public/uploads/images-1667291147511.jpeg",
-    userId,
-  });
   return redirect(`/dashboard`);
 }
 
-export default function CreateBadge() {
+const competencies = [
+  {
+    id: 1,
+    name: "Communication",
+  },
+  {
+    id: 2,
+    name: "Collaboration",
+  },
+
+  {
+    id: 3,
+    name: "Creativity",
+  },
+  {
+    id: 4,
+    name: "Critical Thinking",
+  },
+];
+
+export default function CreateActivity() {
   const [badgeName, setBadgeName] = useState("");
   const [badgeDescription, setBadgeDescription] = useState("");
 
@@ -72,9 +78,9 @@ export default function CreateBadge() {
             component="h4"
             fontFamily="Roboto"
           >
-            Create a Badge
+            Create an Activity
           </Typography>
-          <Box sx={{ fontStyle: "italic" }}>Badge Name: </Box>
+          <Box sx={{ fontStyle: "italic" }}>Activity Name: </Box>
 
           <TextField
             style={{ width: "100%" }}
@@ -94,15 +100,23 @@ export default function CreateBadge() {
             className="w-full flex-1 rounded-md border-2 py-2 px-3 text-lg leading-6"
             required
           />
-
-          <Box sx={{ fontStyle: "italic" }}>Select a picture for the badge</Box>
-
-          <input
-            type="file"
-            // name="picture"
-            required
-            accept="image/png, image/jpeg"
+          <Autocomplete
+            isOptionEqualToValue={(option, value) => option.name === value.name}
+            multiple
+            id="tags-standard"
+            name="competencies"
+            options={competencies}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="Select Competencies"
+                placeholder="Competency"
+              />
+            )}
           />
+
           <Button type="submit" variant="contained">
             Submit
           </Button>

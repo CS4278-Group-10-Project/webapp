@@ -23,11 +23,11 @@ export default function LogHours() {
   };
 
   return (
-    <Box className="h-full bg-gray-100" style={{ padding: "10%" }}>
+    <Box className="h-full bg-gray-100" style={{ padding: "5%" }}>
       <Paper
         style={{
           margin: "auto",
-          padding: "10%",
+          padding: "5%",
         }}
       >
         <Form
