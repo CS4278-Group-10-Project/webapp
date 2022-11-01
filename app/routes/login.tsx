@@ -1,11 +1,34 @@
-import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
-import * as React from "react";
+import React, { useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { ToastContainer, toast } from "react-toastify";
 
-import { verifyLogin } from "~/models/user.server";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import {
+  ActionArgs,
+  json,
+  LoaderArgs,
+  MetaFunction,
+  redirect,
+} from "@remix-run/node";
 import { createUserSession, getUserId } from "~/session.server";
+import { verifyLogin } from "~/models/user.server";
 import { safeRedirect, validateEmail } from "~/utils";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Login",
+  };
+};
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await getUserId(request);
@@ -19,6 +42,12 @@ export async function action({ request }: ActionArgs) {
   const password = formData.get("password");
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
   const remember = formData.get("remember");
+
+  console.log({
+    email,
+    password,
+    remember,
+  });
 
   if (!validateEmail(email)) {
     return json(
@@ -58,122 +87,108 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Login",
-  };
-};
+function Copyright(props: any) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" to="/">
+        VUSN
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
-export default function LoginPage() {
+export default function LogIn() {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/notes";
-  const actionData = useActionData<typeof action>();
-  const emailRef = React.useRef<HTMLInputElement>(null);
-  const passwordRef = React.useRef<HTMLInputElement>(null);
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
-  React.useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
+  const actionData = useActionData<typeof action>();
+  useEffect(() => {
+    if (actionData?.errors) {
+      toast.warn(`${Object.values(actionData.errors).join(" ")}`);
     }
   }, [actionData]);
 
   return (
-    <div className="flex min-h-full flex-col justify-center">
-      <div className="mx-auto w-full max-w-md px-8">
-        <Form method="post" className="space-y-6" noValidate>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <Box mt={1}>
+          <Form method="post" noValidate>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="on" color="primary" name="remember" />}
+              label="Remember me"
+            />
+            <input type="hidden" name="redirectTo" value={redirectTo} />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
             >
-              Email address
-            </label>
-            <div className="mt-1">
-              <input
-                ref={emailRef}
-                id="email"
-                required
-                autoFocus={true}
-                name="email"
-                type="email"
-                autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-              />
-              {actionData?.errors?.email && (
-                <div className="pt-1 text-red-700" id="email-error">
-                  {actionData.errors.email}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <div className="mt-1">
-              <input
-                id="password"
-                ref={passwordRef}
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
-                aria-describedby="password-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-              />
-              {actionData?.errors?.password && (
-                <div className="pt-1 text-red-700" id="password-error">
-                  {actionData.errors.password}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <input type="hidden" name="redirectTo" value={redirectTo} />
-          <button
-            type="submit"
-            className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
-            Log in
-          </button>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember"
-                name="remember"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <label
-                htmlFor="remember"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-            <div className="text-center text-sm text-gray-500">
-              Don't have an account?{" "}
-              <Link
-                className="text-blue-500 underline"
-                to={{
-                  pathname: "/register",
-                  search: searchParams.toString(),
-                }}
-              >
-                Sign up
-              </Link>
-            </div>
-          </div>
-        </Form>
-      </div>
-    </div>
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link to="/register">Don't have an account? Sign Up</Link>
+              </Grid>
+            </Grid>
+          </Form>
+        </Box>
+      </Box>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    </Container>
   );
 }
