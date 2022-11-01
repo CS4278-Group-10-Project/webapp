@@ -35,9 +35,9 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function Dashboard() {
   const user = useLoaderData();
-  const competencies = (user.completedCourses ?? []).map(
-    (course: any) => course.competencies
-  );
+  const competencies = (user.completedCourses ?? [])
+    .map((course: any) => course.competencies)
+    .filter((comp: any[]) => comp.length > 0);
 
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">

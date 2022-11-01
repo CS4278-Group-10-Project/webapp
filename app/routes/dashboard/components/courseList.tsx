@@ -1,12 +1,15 @@
 import { Box } from "@mui/material";
+import { Course } from "@prisma/client";
 import CourseCard from "./courseCard";
 
 export default function CourseList({
   title,
   courses,
+  isProfessor,
 }: {
   title: string;
-  courses: string[];
+  courses: Course[];
+  isProfessor?: boolean;
 }) {
   return (
     <>
@@ -15,7 +18,7 @@ export default function CourseList({
       </h2>
       <Box className="flex flex-wrap gap-10 overflow-x-scroll pl-5">
         {courses.map((course, key) => (
-          <CourseCard course={course} key={key} />
+          <CourseCard course={course} key={key} isProfessor={isProfessor} />
         ))}
       </Box>
     </>

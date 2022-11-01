@@ -32,6 +32,20 @@ export async function getUserId(
   return userId;
 }
 
+export async function getFullProfessorUser(request: Request) {
+  const userId = await getUserId(request);
+  if (userId === undefined) return null;
+
+  const user = await getUserById(userId, {
+    badgesCreated: true,
+    program: true,
+    coursesTaught: true,
+  });
+  if (user) return user;
+
+  throw await logout(request);
+}
+
 export async function getFullStudentUser(request: Request) {
   const userId = await getUserId(request);
   if (userId === undefined) return null;
