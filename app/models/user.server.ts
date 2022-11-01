@@ -27,7 +27,7 @@ export async function createUser({
   firstName: User["firstName"];
   lastName: User["lastName"];
   bio: User["bio"];
-  programId: User["programId"] | string;
+  programId: string;
   standing: StudentStanding;
 }) {
   const hashedPassword = await bcrypt.hash(password, 10);
