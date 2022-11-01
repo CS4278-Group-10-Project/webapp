@@ -1,3 +1,5 @@
+import { UserType } from ".prisma/client";
+import { Button } from "@mui/material";
 import { Form, Link } from "@remix-run/react";
 import { logout } from "~/session.server";
 import { useOptionalUser } from "~/utils";
@@ -30,11 +32,7 @@ export default function Index() {
                     className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0"
                   >
                     <Link
-                      to={
-                        user.accountType === "STUDENT"
-                          ? "/dashboard"
-                          : "/professor"
-                      }
+                      to="/dashboard"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
                     >
                       Go to Dashboard for {user.email}
