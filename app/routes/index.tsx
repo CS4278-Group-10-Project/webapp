@@ -35,7 +35,7 @@ export default function Index() {
                       to="/dashboard"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
                     >
-                      Go to Dashboard for {user.email}
+                      Go to Dashboard for {user.firstName}
                     </Link>
                     <Form action="/logout" method="post">
                       <button
