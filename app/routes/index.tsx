@@ -1,11 +1,23 @@
 import { UserType } from ".prisma/client";
-import { Button, Container, Grid, Paper } from "@mui/material";
-import { Form, Link } from "@remix-run/react";
-import { logout } from "~/session.server";
-import { useOptionalUser } from "~/utils";
+import { Paper } from "@mui/material";
+import { LoaderArgs, redirect } from "@remix-run/node";
+import { Link } from "@remix-run/react";
+import { getFullStudentUser } from "~/session.server";
+
+export async function loader({ request }: LoaderArgs) {
+  const user = await getFullStudentUser(request);
+
+  if (user && user.accountType === UserType.PROFESSOR) {
+    return redirect("/dashboard/professor");
+  }
+
+  if (user && user.accountType === UserType.STUDENT) {
+    return redirect("/dashboard");
+  }
+  return {};
+}
 
 export default function Index() {
-  const user = useOptionalUser();
   return (
     <main>
       <div className="relative h-full">
@@ -33,44 +45,20 @@ export default function Index() {
                 </p>
 
                 <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-                  {user ? (
-                    <Grid container>
-                      <Grid item xs={6}>
-                        <center>
-                          <Link to="/dashboard">
-                            <Button variant="contained">
-                              Go to {user.firstName} profile
-                            </Button>
-                          </Link>
-                        </center>
-                      </Grid>
-
-                      <Grid item xs={6}>
-                        <center>
-                          <Form action="/logout" method="post">
-                            <Button variant="contained" type="submit">
-                              Logout
-                            </Button>
-                          </Form>
-                        </center>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                      <Link
-                        to="/register"
-                        className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
-                      >
-                        Sign up
-                      </Link>
-                      <Link
-                        to="/login"
-                        className="flex items-center justify-center rounded-md bg-blue-500 px-4 py-3 font-medium text-white hover:bg-blue-600"
-                      >
-                        Log In
-                      </Link>
-                    </div>
-                  )}
+                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+                    <Link
+                      to="/register"
+                      className="flex items-center justify-center rounded-md bg-blue-500 px-4 py-3 font-medium text-white hover:bg-blue-600"
+                    >
+                      Sign up
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="flex items-center justify-center rounded-md bg-blue-500 px-4 py-3 font-medium text-white hover:bg-blue-600"
+                    >
+                      Log In
+                    </Link>
+                  </div>
                 </div>
               </Paper>
             </div>
