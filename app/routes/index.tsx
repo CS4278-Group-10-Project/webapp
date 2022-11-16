@@ -2,10 +2,10 @@ import { UserType } from ".prisma/client";
 import { Paper } from "@mui/material";
 import { LoaderArgs, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { getFullStudentUser } from "~/session.server";
+import { getUser } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await getFullStudentUser(request);
+  const user = await getUser(request);
 
   if (user && user.accountType === UserType.PROFESSOR) {
     return redirect("/dashboard/professor");
