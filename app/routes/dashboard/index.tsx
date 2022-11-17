@@ -4,10 +4,11 @@ import CompetencyList from "./components/competencyList";
 import UserInfo from "./components/userinfo";
 import { getFullStudentUser, getUser, getUserId } from "~/session.server";
 import { Course, HoursLog, User, UserType } from ".prisma/client";
-import { json, LoaderArgs, redirect } from "@remix-run/node";
+import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +16,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { deleteLoggedHours } from "~/models/deleteLoggedHours.server";
 
 function HoursLoggedTable({
   hoursCompleted,
@@ -68,9 +70,11 @@ function HoursLoggedTable({
                 </TableCell>
 
                 <TableCell align="right">
-                  <Form method="post" action={`/api/hours/${hour.id}`}>
-                    <input type="hidden" name="action" value="delete" />
-                    <button type="submit">Delete</button>
+                  <Form method="post">
+                    <input type="hidden" name="hourId" value={hour.id} />
+                    <Button size="small" type="submit">
+                      Delete
+                    </Button>
                   </Form>
                 </TableCell>
               </TableRow>
@@ -113,6 +117,15 @@ export async function loader({ request }: LoaderArgs) {
   if (user.accountType === UserType.PROFESSOR)
     return redirect("/dashboard/professor");
   return json(user);
+}
+
+export async function action({ request }: ActionArgs) {
+  const formData = await request.formData();
+  const hourId = formData.get("hourId");
+  await deleteLoggedHours({
+    id: hourId as string,
+  });
+  return redirect(`/dashboard`);
 }
 
 export default function Dashboard() {
