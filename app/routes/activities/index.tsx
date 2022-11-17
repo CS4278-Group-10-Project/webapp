@@ -2,7 +2,7 @@ import { getFullStudentUser, getUser, getUserId } from "~/session.server";
 import { UserType } from ".prisma/client";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { toast, ToastContainer } from "react-toastify";
 import {
   Box,
@@ -219,10 +219,17 @@ export default function Activities() {
 
   return (
     <main
-      className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex"
+      className="sm:items-top sm:justify-left relative bg-white sm:flex"
       style={{ padding: "0 20px" }}
     >
       <Grid container spacing={1} mt={3}>
+        {!isProfessor && (
+          <Grid xs={12} ml={2}>
+            <Link to="/activities/create">
+              <Button variant="contained">Create an activity</Button>
+            </Link>
+          </Grid>
+        )}
         {activities.map((activity: any, key: any) => (
           <Grid item xs={3} key={key}>
             <ActivityCard activity={activity} isProfessor={isProfessor} />

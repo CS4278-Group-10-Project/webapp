@@ -23,10 +23,10 @@ export default function Overview() {
         >
           Brightspace
         </Link>
-        <Link href="/badge/create" className="text-white underline">
+        <Link href="/badges/create" className="text-white underline">
           Create Badge
         </Link>
-        <Link href="/badge/assign" className="text-white underline">
+        <Link href="/badges/assign" className="text-white underline">
           Assign Badge to Student
         </Link>
       </Box>
