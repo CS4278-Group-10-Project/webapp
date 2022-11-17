@@ -1,25 +1,45 @@
 import { getFullStudentUser, getUser, getUserId } from "~/session.server";
 import { UserType } from ".prisma/client";
-import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { getAllCourses } from "~/models/course.server";
-import CourseCard from "~/routes/dashboard/components/courseCard";
-import { Box, Button, Grid } from "@mui/material";
-import { enroll } from "~/models/enroll.server";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+
+import {
+  deleteActivity,
+  editActivity,
+  getActivities,
+} from "~/models/activities.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await getFullStudentUser(request);
+  const user = await getUser(request);
   if (!user) {
     return redirect("/login");
   }
+  const activities = await getActivities({
+    request: request,
+    isProfessor: user.accountType === UserType.PROFESSOR,
+  });
 
-  if (user.accountType === UserType.PROFESSOR) {
-    return redirect("/dashboard/professor");
-  }
-
-  const courses = await getAllCourses(request);
-
-  return json(courses);
+  return json({
+    activities: activities,
+    isProfessor: user.accountType === UserType.PROFESSOR,
+  });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -28,61 +48,174 @@ export async function action({ request }: ActionArgs) {
     return redirect("/login");
   }
   const formData = await request.formData();
-  const courseId = formData.get("courseId");
-  const action = formData.get("actionType");
+  const action = formData.get("action");
+  const id = formData.get("activityId");
 
-  return await enroll({
-    userId: userId,
-    courseId: courseId as string,
-    unenroll: action === "unenroll",
-  });
+  if (action === "delete") {
+    await deleteActivity({ id: id as string });
+    return redirect("/activities");
+  } else if (action === "edit") {
+    const name = formData.get("name");
+    const description = formData.get("description");
+
+    await editActivity({
+      id: id as string,
+      name: name as string,
+      description: description as string,
+    });
+    return redirect("/activities");
+  }
 }
 
-function EnrollCourseContent({ course }: { course: any }) {
+function ViewActivityDialog({
+  activity,
+  open,
+  setModalOpen,
+  isProfessor,
+}: {
+  activity: any;
+  open: boolean;
+  setModalOpen: (open: boolean) => void;
+  isProfessor: boolean;
+}) {
   return (
-    <Form method="post">
-      <input type="hidden" name="courseId" value={course.id} />
+    <Dialog
+      style={{ minWidth: "400px" }}
+      open={open}
+      onClose={() => setModalOpen(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{activity.name}</DialogTitle>
+      <DialogContent>
+        <Typography variant="body2" color="text.secondary">
+          {activity.description}
+        </Typography>
+      </DialogContent>
+      <DialogContent>
+        <Typography variant="body2" color="text.secondary">
+          {isProfessor && (
+            <Typography variant="body2" color="text.secondary">
+              Created By: {activity.userId}
+            </Typography>
+          )}
+        </Typography>
+      </DialogContent>
 
-      <input
-        type="hidden"
-        name="actionType"
-        value={course.enrolled ? "unenroll" : "enroll"}
-      />
-      <Box>
-        <CourseCard course={course} isProfessor={false} />
-
-        {course.completed ? (
-          <Button
-            disabled
-            variant="contained"
-            className="mt-2 w-full transform rounded-md bg-gray-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
-          >
-            Already Completed
-          </Button>
-        ) : course.enrolled ? (
-          <Button
-            type="submit"
-            variant="contained"
-            className="mt-2 w-full transform rounded-md bg-gray-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
-          >
-            Unenroll
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            variant="contained"
-            className="mt-2 w-full transform rounded-md bg-blue-500 px-4 py-2 text-sm font-medium uppercase text-white transition-colors duration-200 hover:bg-blue-600 focus:bg-blue-600 focus:outline-none"
-          >
-            Enroll
-          </Button>
-        )}
-      </Box>
-    </Form>
+      <DialogActions>
+        <Button onClick={() => setModalOpen(false)} autoFocus>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
-export default function EnrollStudents() {
-  const courses = useLoaderData();
+function EditActivityDialog({
+  activity,
+  open,
+  setModalOpen,
+}: {
+  activity: any;
+  open: boolean;
+  setModalOpen: (open: boolean) => void;
+}) {
+  return (
+    <Dialog
+      open={open}
+      onClose={() => setModalOpen(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">Edit Competency</DialogTitle>
+      <Form method="post" onSubmit={() => toast.info("Editing Activity!")}>
+        <DialogContent>
+          <input type="hidden" name="activityId" value={activity.id} />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            defaultValue={activity.name}
+          />
+          <TextField
+            margin="dense"
+            name="description"
+            label="Description"
+            type="text"
+            fullWidth
+            defaultValue={activity.description}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModalOpen(false)} autoFocus>
+            Close
+          </Button>
+          <Button type="submit" name="action" value="edit" autoFocus>
+            Save
+          </Button>
+          <Button type="submit" name="action" value="delete">
+            Delete
+          </Button>
+        </DialogActions>
+      </Form>
+    </Dialog>
+  );
+}
+
+function ActivityCard({
+  activity,
+  isProfessor,
+}: {
+  activity: any;
+  isProfessor: boolean;
+}) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+
+  return (
+    <Box p={2}>
+      <Card>
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            noWrap
+            onClick={() => setModalOpen(true)}
+          >
+            {activity.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap>
+            {activity.description}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button onClick={() => setModalOpen(true)}>View</Button>
+          {!isProfessor && (
+            <Button onClick={() => setEditModalOpen(true)}>Edit</Button>
+          )}
+        </CardActions>
+      </Card>
+      <ViewActivityDialog
+        activity={activity}
+        open={modalOpen}
+        setModalOpen={setModalOpen}
+        isProfessor={isProfessor}
+      />
+      <EditActivityDialog
+        activity={activity}
+        open={editModalOpen}
+        setModalOpen={setEditModalOpen}
+      />
+    </Box>
+  );
+}
+
+export default function Activities() {
+  const { activities, isProfessor } = useLoaderData();
 
   return (
     <main
@@ -90,12 +223,25 @@ export default function EnrollStudents() {
       style={{ padding: "0 20px" }}
     >
       <Grid container spacing={1} mt={3}>
-        {courses.map((course: any, key: any) => (
+        {activities.map((activity: any, key: any) => (
           <Grid item xs={3} key={key}>
-            <EnrollCourseContent course={course} key={key} />
+            <ActivityCard activity={activity} isProfessor={isProfessor} />
           </Grid>
         ))}
       </Grid>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </main>
   );
 }

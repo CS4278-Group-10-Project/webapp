@@ -11,7 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { getUserId } from "~/session.server";
-import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { createActivity } from "~/models/activities.server";
 import { getAllCompetencies } from "~/models/competencies.server";
 
@@ -30,13 +31,11 @@ export async function action({ request }: ActionArgs) {
   const description = formData.get("description");
   const competencies = JSON.parse(formData.get("competencies") as string);
 
-  const activity = await createActivity(request, {
+  await createActivity(request, {
     name: name as string,
     description: description as string,
     competencies,
   });
-
-  console.log({ activity });
 
   return redirect("/activities");
 }
