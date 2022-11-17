@@ -29,19 +29,16 @@ export async function action({ request }: ActionArgs) {
   const name = formData.get("name");
   const description = formData.get("description");
   const competencies = JSON.parse(formData.get("competencies") as string);
-  console.log("action", {
-    name,
-    description,
+
+  const activity = await createActivity(request, {
+    name: name as string,
+    description: description as string,
     competencies,
   });
 
-  return json({
-    activity: createActivity(request, {
-      name,
-      description,
-      competencies,
-    }),
-  });
+  console.log({ activity });
+
+  return redirect("/activities");
 }
 
 export default function CreateActivity() {
