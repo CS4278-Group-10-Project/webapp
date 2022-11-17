@@ -4,8 +4,21 @@ import StudentList from "./components/studentList";
 import BadgeList from "./components/badgeList";
 import { Form } from "@remix-run/react";
 import { ToastContainer, toast } from "react-toastify";
+import type { LoaderArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { getFullProfessorUser } from "~/session.server";
+import { UserType } from "@prisma/client";
 
-export default function LogHours() {
+export async function loader({ request }: LoaderArgs) {
+  const user = await getFullProfessorUser(request);
+  if (!user) {
+    return redirect("/login");
+  }
+  if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
+  return {};
+}
+
+export default function AssignBadge() {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedBadges, setSelectedBadges] = useState([]);
 
