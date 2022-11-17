@@ -34,7 +34,8 @@ export async function action({ request }: ActionArgs) {
   const badge = await createBadge({
     name,
     description,
-    pictureUrl: "public/uploads/images-1667291147511.jpeg",
+    pictureUrl:
+      "https://i.picsum.photos/id/1022/200/200.jpg?hmac=MjK2sur6luq2UfxMPWBFBuPyvZYyYLYvQH9kCmEGJRY",
     userId,
   });
   return redirect(`/dashboard`);

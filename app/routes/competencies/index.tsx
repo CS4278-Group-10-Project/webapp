@@ -2,7 +2,7 @@ import { getFullStudentUser, getUserId } from "~/session.server";
 import { UserType } from ".prisma/client";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 
 import {
   Box,
@@ -204,10 +204,17 @@ export default function Competencies() {
 
   return (
     <main
-      className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex"
+      className="sm:items-top sm:justify-left relative bg-white sm:flex"
       style={{ padding: "0 20px" }}
     >
-      <Grid container spacing={1} mt={3}>
+      <Grid container mt={3} rowSpacing={2} columnSpacing={1}>
+        {isProfessor && (
+          <Grid xs={12} ml={2}>
+            <Link to="/competencies/create">
+              <Button variant="contained">Add Competency</Button>
+            </Link>
+          </Grid>
+        )}
         {competencies.map((competency: any, key: any) => (
           <Grid item xs={3} key={key}>
             <CompetencyCard competency={competency} isProfessor={isProfessor} />

@@ -22,10 +22,15 @@ export default function Sidebar({ userInfo, list }: any) {
         open={drawerOpen}
         onBackdropClick={() => setDrawerOpen(false)}
       >
-        <div className="h-full overflow-y-auto bg-black py-4 px-3 dark:bg-gray-800">
+        <Box
+          className=" h-full overflow-y-auto bg-black py-4 px-3 dark:bg-gray-800"
+          sx={{
+            width: 600,
+          }}
+        >
           {userInfo}
           {list}
-        </div>
+        </Box>
       </Drawer>
     </>
   );
