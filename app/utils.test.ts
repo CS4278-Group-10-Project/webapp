@@ -1,3 +1,9 @@
+import { prisma } from "~/db.server";
+import {
+  createCompetency,
+  deleteCompetency,
+} from "./models/competencies.server";
+
 import { safeRedirect, validateEmail, DEFAULT_REDIRECT } from "./utils";
 
 test("validateEmail returns false for non-emails", () => {
@@ -22,3 +28,25 @@ test("safeRedirect returns default redirect for invalid input", () => {
 });
 
 // write a test to check if createCompetency returns a competency
+test("createCompetency returns a competency", async () => {
+  const competency = await createCompetency({
+    name: "test",
+    description: "test_description",
+  });
+  expect(competency).toBeTruthy();
+  expect(competency.name).toBe("test");
+  expect(competency.description).toBe("test_description");
+});
+
+// write a test to check if deleteCompetency deletes a competency
+test("deleteCompetency deletes a competency", async () => {
+  const competency = await createCompetency({
+    name: "test",
+    description: "test_description",
+  });
+  await deleteCompetency({ id: competency.id });
+  const deletedCompetency = await prisma.competency.findUnique({
+    where: { id: competency.id },
+  });
+  expect(deletedCompetency).toBeNull();
+});
