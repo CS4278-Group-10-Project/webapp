@@ -11,7 +11,7 @@ type UserInfoType = User & {
 };
 
 const calculateProgression = (user: UserInfoType) => {
-  const programCourses = user.program.courses;
+  const programCourses = user.program.courses ?? [];
   const completedCourses = user.completedCourses;
   const overlap = programCourses.filter((course) =>
     completedCourses.some((completedCourse) => completedCourse.id === course.id)

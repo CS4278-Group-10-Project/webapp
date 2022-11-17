@@ -137,6 +137,7 @@ export async function action({ request }: ActionArgs) {
 
 export default function Dashboard() {
   const user = useLoaderData();
+  console.log({ user });
   const competencies = (user.completedCourses ?? [])
     .map((course: any) => course.competencies)
     .filter((comp: any[]) => comp.length > 0);
