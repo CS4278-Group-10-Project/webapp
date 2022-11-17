@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
 
-const DEFAULT_REDIRECT = "/";
+export const DEFAULT_REDIRECT = "/";
 
 /**
  * This should be used any time the redirect path is user-provided
@@ -69,7 +69,6 @@ export function useUser(): User {
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
-
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
