@@ -22,3 +22,11 @@ export async function getAllCourses(request: Request) {
     };
   });
 }
+
+export async function getCourseById({ id }: { id: string }) {
+  const course = await prisma.course.findUnique({
+    where: { id },
+  });
+
+  return course;
+}
