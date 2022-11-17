@@ -1,9 +1,9 @@
-import { getFullStudentUser, getUserId } from "~/session.server";
+import { getFullStudentUser, getUser, getUserId } from "~/session.server";
 import { UserType } from ".prisma/client";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-
+import { toast, ToastContainer } from "react-toastify";
 import {
   Box,
   Button,
@@ -19,21 +19,25 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+
 import {
-  deleteCompetency,
-  editCompetency,
-  getAllCompetencies,
-} from "~/models/competencies.server";
+  deleteActivity,
+  editActivity,
+  getActivities,
+} from "~/models/activities.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await getFullStudentUser(request);
+  const user = await getUser(request);
   if (!user) {
     return redirect("/login");
   }
-  const competencies = await getAllCompetencies();
+  const activities = await getActivities({
+    request: request,
+    isProfessor: user.accountType === UserType.PROFESSOR,
+  });
 
   return json({
-    competencies: competencies,
+    activities: activities,
     isProfessor: user.accountType === UserType.PROFESSOR,
   });
 }
@@ -45,49 +49,59 @@ export async function action({ request }: ActionArgs) {
   }
   const formData = await request.formData();
   const action = formData.get("action");
-  const id = formData.get("competencyId");
+  const id = formData.get("activityId");
 
   if (action === "delete") {
-    await deleteCompetency({ id: id as string });
-    return redirect("/competencies");
+    await deleteActivity({ id: id as string });
+    return redirect("/activities");
   } else if (action === "edit") {
     const name = formData.get("name");
     const description = formData.get("description");
 
-    console.log(name, description);
-
-    await editCompetency({
+    await editActivity({
       id: id as string,
       name: name as string,
       description: description as string,
     });
-
-    return redirect("/competencies");
+    return redirect("/activities");
   }
 }
 
-function ViewCompetencyDialog({
-  competency,
+function ViewActivityDialog({
+  activity,
   open,
   setModalOpen,
+  isProfessor,
 }: {
-  competency: any;
+  activity: any;
   open: boolean;
   setModalOpen: (open: boolean) => void;
+  isProfessor: boolean;
 }) {
   return (
     <Dialog
+      style={{ minWidth: "400px" }}
       open={open}
       onClose={() => setModalOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{competency.name}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{activity.name}</DialogTitle>
       <DialogContent>
         <Typography variant="body2" color="text.secondary">
-          {competency.description}
+          {activity.description}
         </Typography>
       </DialogContent>
+      <DialogContent>
+        <Typography variant="body2" color="text.secondary">
+          {isProfessor && (
+            <Typography variant="body2" color="text.secondary">
+              Created By: {activity.userId}
+            </Typography>
+          )}
+        </Typography>
+      </DialogContent>
+
       <DialogActions>
         <Button onClick={() => setModalOpen(false)} autoFocus>
           Close
@@ -97,12 +111,12 @@ function ViewCompetencyDialog({
   );
 }
 
-function EditCompetencyDialog({
-  competency,
+function EditActivityDialog({
+  activity,
   open,
   setModalOpen,
 }: {
-  competency: any;
+  activity: any;
   open: boolean;
   setModalOpen: (open: boolean) => void;
 }) {
@@ -114,9 +128,9 @@ function EditCompetencyDialog({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">Edit Competency</DialogTitle>
-      <Form method="post">
+      <Form method="post" onSubmit={() => toast.info("Editing Activity!")}>
         <DialogContent>
-          <input type="hidden" name="competencyId" value={competency.id} />
+          <input type="hidden" name="activityId" value={activity.id} />
           <TextField
             autoFocus
             margin="dense"
@@ -124,7 +138,7 @@ function EditCompetencyDialog({
             label="Name"
             type="text"
             fullWidth
-            defaultValue={competency.name}
+            defaultValue={activity.name}
           />
           <TextField
             margin="dense"
@@ -132,7 +146,7 @@ function EditCompetencyDialog({
             label="Description"
             type="text"
             fullWidth
-            defaultValue={competency.description}
+            defaultValue={activity.description}
           />
         </DialogContent>
         <DialogActions>
@@ -151,11 +165,11 @@ function EditCompetencyDialog({
   );
 }
 
-function CompetencyCard({
-  competency,
+function ActivityCard({
+  activity,
   isProfessor,
 }: {
-  competency: any;
+  activity: any;
   isProfessor: boolean;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -172,26 +186,27 @@ function CompetencyCard({
             noWrap
             onClick={() => setModalOpen(true)}
           >
-            {competency.name}
+            {activity.name}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
-            {competency.description}
+            {activity.description}
           </Typography>
         </CardContent>
         <CardActions>
           <Button onClick={() => setModalOpen(true)}>View</Button>
-          {isProfessor && (
+          {!isProfessor && (
             <Button onClick={() => setEditModalOpen(true)}>Edit</Button>
           )}
         </CardActions>
       </Card>
-      <ViewCompetencyDialog
-        competency={competency}
+      <ViewActivityDialog
+        activity={activity}
         open={modalOpen}
         setModalOpen={setModalOpen}
+        isProfessor={isProfessor}
       />
-      <EditCompetencyDialog
-        competency={competency}
+      <EditActivityDialog
+        activity={activity}
         open={editModalOpen}
         setModalOpen={setEditModalOpen}
       />
@@ -199,8 +214,8 @@ function CompetencyCard({
   );
 }
 
-export default function Competencies() {
-  const { competencies, isProfessor } = useLoaderData();
+export default function Activities() {
+  const { activities, isProfessor } = useLoaderData();
 
   return (
     <main
@@ -208,12 +223,25 @@ export default function Competencies() {
       style={{ padding: "0 20px" }}
     >
       <Grid container spacing={1} mt={3}>
-        {competencies.map((competency: any, key: any) => (
+        {activities.map((activity: any, key: any) => (
           <Grid item xs={3} key={key}>
-            <CompetencyCard competency={competency} isProfessor={isProfessor} />
+            <ActivityCard activity={activity} isProfessor={isProfessor} />
           </Grid>
         ))}
       </Grid>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </main>
   );
 }

@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 const HeaderItem = ({ title, link }: { title: string; link: string }) => {
   // get current path the page is on
   const currentPath = useLocation()?.pathname;
-  console.log({ currentPath, link });
+
   return (
     <Button
       sx={{
