@@ -18,6 +18,30 @@ import { useState } from "react";
 import LogHours from "./logHours";
 import ProfessorCourse from "./professorCourse";
 
+function ViewCourseModal({
+  course,
+  open,
+  setOpen,
+}: {
+  course: Course;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle>{course.name}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          {course.description}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Close</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 export default function CourseCard({
   course,
   isProfessor,
@@ -26,6 +50,7 @@ export default function CourseCard({
   isProfessor?: boolean;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
 
   return (
     <Box p={2} style={{ maxWidth: "400px" }}>
@@ -39,7 +64,7 @@ export default function CourseCard({
           </Typography>
         </CardContent>
         <CardActions>
-          <Button>View</Button>
+          <Button onClick={() => setViewModal(true)}>View</Button>
           {!isProfessor && (
             <Button
               onClick={() => {
@@ -74,6 +99,11 @@ export default function CourseCard({
           </Button>
         </DialogActions>
       </Dialog>
+      <ViewCourseModal
+        course={course}
+        open={viewModal}
+        setOpen={setViewModal}
+      />
     </Box>
   );
 }
