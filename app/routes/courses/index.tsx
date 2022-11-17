@@ -91,7 +91,7 @@ export default function EnrollStudents() {
     >
       <Grid container spacing={1} mt={3}>
         {courses.map((course: any, key: any) => (
-          <Grid item xs={3} key={key}>
+          <Grid item xs={6} md={2} key={key}>
             <EnrollCourseContent course={course} key={key} />
           </Grid>
         ))}
