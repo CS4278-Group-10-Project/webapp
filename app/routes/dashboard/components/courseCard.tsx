@@ -6,8 +6,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Card,
+  CardMedia,
+  Typography,
+  CardContent,
+  CardActions,
 } from "@mui/material";
-import { Course } from "@prisma/client";
+import type { Course } from "@prisma/client";
+import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import LogHours from "./logHours";
 import ProfessorCourse from "./professorCourse";
@@ -20,17 +26,38 @@ export default function CourseCard({
   isProfessor?: boolean;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Box>
-      <Box
-        className="relative h-32  w-48 min-w-full  cursor-pointer rounded-lg bg-gray-300 shadow"
-        onClick={() => setModalOpen(true)}
-      >
-        <Box className="text-1xl flex h-full w-full items-center justify-center font-medium">
-          {course.name}
-        </Box>
-      </Box>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardMedia
+          onClick={() => navigate(`/course/${course.id}`)}
+          component="img"
+          image="https://media.istockphoto.com/id/1366428092/photo/webinar-e-learning-skills-business-internet-technology-concepts-training-webinar-e-learning.jpg?b=1&s=170667a&w=0&k=20&c=qjK4h0qt4W_NNG8TmboGw8RDRv8TNzEoFM_JEDZ1Ah0="
+          alt="Course Image"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {course.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap>
+            {course.description}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button>View</Button>
+          {!isProfessor && (
+            <Button
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              Log Hours
+            </Button>
+          )}
+        </CardActions>
+      </Card>
 
       <Dialog
         open={modalOpen}
