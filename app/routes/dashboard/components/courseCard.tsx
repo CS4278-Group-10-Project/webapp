@@ -30,9 +30,9 @@ export default function CourseCard({
 
   return (
     <Box>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card>
         <CardMedia
-          onClick={() => navigate(`/course/${course.id}`)}
+          onClick={() => navigate(`/courses/${course.id}`)}
           component="img"
           image="https://media.istockphoto.com/id/1366428092/photo/webinar-e-learning-skills-business-internet-technology-concepts-training-webinar-e-learning.jpg?b=1&s=170667a&w=0&k=20&c=qjK4h0qt4W_NNG8TmboGw8RDRv8TNzEoFM_JEDZ1Ah0="
           alt="Course Image"
