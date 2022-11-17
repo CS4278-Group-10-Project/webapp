@@ -8,21 +8,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getUserId } from "~/session.server";
-import {
-  ActionArgs,
-  json,
-  LoaderArgs,
-  NodeOnDiskFile,
-  redirect,
-  unstable_createFileUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
+import { getFullProfessorUser, getUserId } from "~/session.server";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { createBadge } from "~/models/badge.server";
+import { UserType } from "@prisma/client";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = await getUserId(request);
-  if (!userId) return redirect("/login");
+  const user = await getFullProfessorUser(request);
+  if (!user) {
+    return redirect("/login");
+  }
+  if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
   return json({});
 }
 
