@@ -1,6 +1,7 @@
 import { getFullStudentUser, getUserId } from "~/session.server";
 import { UserType } from ".prisma/client";
-import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
 import {

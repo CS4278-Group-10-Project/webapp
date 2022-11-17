@@ -1,7 +1,25 @@
 import { Competency } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-export async function getAllCompetencies() {
+//create a competency
+export async function createCompetency({
+  name,
+  description,
+}: {
+  name: string;
+  description: string;
+}) {
+  const competency = await prisma.competency.create({
+    data: {
+      name,
+      description,
+    },
+  });
+
+  return competency;
+}
+
+export async function getAllCompetencies(request: Request) {
   return await prisma.competency.findMany();
 }
 
