@@ -6,13 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Form } from "@remix-run/react";
 import { useOptionalUser } from "./utils";
-import {
-  Button,
-  Link,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from "@mui/material";
+import { Button, Link } from "@mui/material";
 
 const HeaderItem = ({ title, link }: { title: string; link: string }) => {
   return (
