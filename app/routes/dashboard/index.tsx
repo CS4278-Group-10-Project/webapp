@@ -49,13 +49,11 @@ function HoursLoggedTable({
                 <TableCell style={{ fontWeight: "bold" }} align="right">
                   End Date
                 </TableCell>
-                <TableCell align="right">
-                  <Form method="post">
-                    <input type="hidden" name="hourId" value={hour.id} />
-                    <Button size="small" type="submit">
-                      Delete
-                    </Button>
-                  </Form>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Description
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Action
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -75,9 +73,11 @@ function HoursLoggedTable({
                   </TableCell>
 
                   <TableCell align="right">
-                    <Form method="post" action={`/api/hours/${hour.id}`}>
-                      <input type="hidden" name="action" value="delete" />
-                      <button type="submit">Delete</button>
+                    <Form method="post">
+                      <input type="hidden" name="hourId" value={hour.id} />
+                      <Button size="small" type="submit">
+                        Delete
+                      </Button>
                     </Form>
                   </TableCell>
                 </TableRow>
