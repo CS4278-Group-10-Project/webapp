@@ -68,9 +68,9 @@ export default function CreateCompetency() {
             component="h4"
             fontFamily="Roboto"
           >
-            Create an Activity
+            Create a Competency
           </Typography>
-          <Box sx={{ fontStyle: "italic" }}>Activity Name: </Box>
+          <Box sx={{ fontStyle: "italic" }}>Competency Name: </Box>
 
           <TextField
             style={{ width: "100%" }}
