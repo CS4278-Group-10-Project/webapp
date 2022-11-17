@@ -17,7 +17,7 @@ export default function Sidebar({ userInfo, list }: any) {
       </Box>
 
       <Drawer
-        className="min-h-full w-80"
+        className="min-h-full "
         aria-label="Sidebar"
         open={drawerOpen}
         onBackdropClick={() => setDrawerOpen(false)}
