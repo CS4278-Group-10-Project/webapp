@@ -1,7 +1,7 @@
 import { Competency } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-export async function getAllCompetencies(request: Request) {
+export async function getAllCompetencies() {
   return await prisma.competency.findMany();
 }
 

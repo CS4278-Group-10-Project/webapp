@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderArgs) {
   if (!user) {
     return redirect("/login");
   }
-  const competencies = await getAllCompetencies(request);
+  const competencies = await getAllCompetencies();
 
   return json({
     competencies: competencies,

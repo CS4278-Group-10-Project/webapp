@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import React, { useRef, useState } from "react";
 import { useSubmit } from "@remix-run/react";
 import {
@@ -6,55 +6,50 @@ import {
   Box,
   Button,
   Paper,
-  Select,
   TextareaAutosize,
   TextField,
   Typography,
 } from "@mui/material";
 import { getUserId } from "~/session.server";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
+import { createActivity } from "~/models/activities.server";
+import { getAllCompetencies } from "~/models/competencies.server";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await getUserId(request);
   if (!userId) return redirect("/login");
-  return json({});
+
+  const competencies = await getAllCompetencies();
+  return json(competencies);
 }
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
-  const userId = await getUserId(request);
 
-  console.log("fuck", JSON.stringify(formData));
-  return json({});
+  const name = formData.get("name");
+  const description = formData.get("description");
+  const competencies = JSON.parse(formData.get("competencies") as string);
+  console.log("action", {
+    name,
+    description,
+    competencies,
+  });
+
+  return json({
+    activity: createActivity(request, {
+      name,
+      description,
+      competencies,
+    }),
+  });
 }
-
-const competencies = [
-  {
-    id: 1,
-    name: "Communication",
-  },
-  {
-    id: 2,
-    name: "Collaboration",
-  },
-
-  {
-    id: 3,
-    name: "Creativity",
-  },
-  {
-    id: 4,
-    name: "Critical Thinking",
-  },
-];
 
 export default function CreateActivity() {
   const [activityName, setActivityName] = useState("");
   const [activityDescription, setActivityDescription] = useState("");
   const [chosenCompetencies, setChosenCompetencies] = useState(null);
-
+  const competencies = useLoaderData();
   const submit = useSubmit();
-
   return (
     <Box className="h-full bg-gray-100" style={{ padding: "3%" }}>
       <Paper
@@ -71,13 +66,11 @@ export default function CreateActivity() {
             width: "80%",
             margin: "auto",
           }}
-          onSubmit={({ currentTarget }) => {
-            console.log("submit", currentTarget);
-
-            const formData = new FormData(currentTarget);
-            formData.set("competencies", JSON.stringify(chosenCompetencies));
-            console.log({ formData });
-            // submit(formData, { method: "post", replace: true });
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            formData.append("competencies", JSON.stringify(chosenCompetencies));
+            submit(formData, { method: "post", replace: true });
           }}
           method="post"
           encType="multipart/form-data"
@@ -126,9 +119,6 @@ export default function CreateActivity() {
                 variant="standard"
                 label="Select Competencies"
                 placeholder="Competency"
-                onChange={(e) => {
-                  console.log("caj", e);
-                }}
               />
             )}
           />
