@@ -28,7 +28,7 @@ export default function CourseCard({
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <Box p={2}>
+    <Box p={2} style={{ maxWidth: "400px" }}>
       <Card>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" noWrap>
