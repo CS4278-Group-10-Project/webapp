@@ -14,7 +14,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import BadgeList from "./components/badgeList";
 
 function HoursLoggedTable({
   hoursCompleted,
@@ -27,57 +29,61 @@ function HoursLoggedTable({
         Hours Logged
       </h2>
 
-      <TableContainer
-        style={{
-          maxHeight: "300px",
-        }}
-      >
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ fontWeight: "bold" }} align="right">
-                Course name
-              </TableCell>
-              <TableCell style={{ fontWeight: "bold" }} align="right">
-                Start Date
-              </TableCell>
-              <TableCell style={{ fontWeight: "bold" }} align="right">
-                End Date
-              </TableCell>
-              <TableCell style={{ fontWeight: "bold" }} align="right">
-                Comment
-              </TableCell>
-              <TableCell style={{ fontWeight: "bold" }} align="right">
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {hoursCompleted.map((hour: any) => (
-              <TableRow key={hour.id}>
-                <TableCell align="right">{hour.course.name}</TableCell>
-                <TableCell align="right">
-                  {new Date(hour.start).toDateString()}
+      {hoursCompleted.length > 0 ? (
+        <TableContainer
+          style={{
+            maxHeight: "300px",
+          }}
+        >
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Course name
                 </TableCell>
-                <TableCell align="right">
-                  {new Date(hour.end).toDateString()}
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Start Date
                 </TableCell>
-                <TableCell align="right">
-                  {hour.comment ? hour.comment : "No comment"}
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  End Date
                 </TableCell>
-
-                <TableCell align="right">
-                  <Form method="post" action={`/api/hours/${hour.id}`}>
-                    <input type="hidden" name="action" value="delete" />
-                    <button type="submit">Delete</button>
-                  </Form>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Comment
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">
+                  Action
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+
+            <TableBody>
+              {hoursCompleted.map((hour: any) => (
+                <TableRow key={hour.id}>
+                  <TableCell align="right">{hour.course.name}</TableCell>
+                  <TableCell align="right">
+                    {new Date(hour.start).toDateString()}
+                  </TableCell>
+                  <TableCell align="right">
+                    {new Date(hour.end).toDateString()}
+                  </TableCell>
+                  <TableCell align="right">
+                    {hour.comment ? hour.comment : "No comment"}
+                  </TableCell>
+
+                  <TableCell align="right">
+                    <Form method="post" action={`/api/hours/${hour.id}`}>
+                      <input type="hidden" name="action" value="delete" />
+                      <button type="submit">Delete</button>
+                    </Form>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Typography ml={3}>No hours logged</Typography>
+      )}
     </Box>
   );
 }
@@ -98,8 +104,9 @@ function DashboardContent({
   return (
     <div>
       <CourseList title={"Current Courses"} courses={enrolledCourses} />
-      <CourseList title={"Completed Courses"} courses={completedCourses} />
       <HoursLoggedTable hoursCompleted={hoursCompleted} />
+      <CourseList title={"Completed Courses"} courses={completedCourses} />
+      <BadgeList />
     </div>
   );
 }

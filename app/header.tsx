@@ -5,11 +5,21 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useOptionalUser } from "./utils";
-import { Button, Link } from "@mui/material";
+import { Button, Link, styled } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const HeaderItem = ({ title, link }: { title: string; link: string }) => {
+  // get current path the page is on
+  const currentPath = useLocation()?.pathname;
+  console.log({ currentPath, link });
   return (
-    <Button>
+    <Button
+      sx={{
+        backgroundColor: link.startsWith(currentPath)
+          ? "#202937"
+          : "transparent",
+      }}
+    >
       <Link href={link} sx={{ color: "#fff", textDecoration: "none" }}>
         {title}
       </Link>
@@ -35,7 +45,7 @@ const LogOutButton = () => {
 };
 
 const HEADER_ITEMS = [
-  { title: "Dashboard", link: "/" },
+  { title: "Dashboard", link: "/dashboard" },
   { title: "Courses", link: "/courses" },
   { title: "Competencies", link: "/competencies" },
   { title: "Activities", link: "/activities" },
@@ -64,11 +74,13 @@ const LoggedOutHeaderItems = () => {
   );
 };
 
+const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
+
 export default function Header() {
   const user = useOptionalUser();
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="static" component="nav">
+      <AppBar position="fixed" component="nav">
         <Toolbar>
           <Link href="/" style={{ flexGrow: "1" }}>
             <Typography
@@ -87,6 +99,7 @@ export default function Header() {
           {user ? <LoggedInHeaderItems /> : <LoggedOutHeaderItems />}
         </Toolbar>
       </AppBar>
+      <Offset />
     </Box>
   );
 }

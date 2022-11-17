@@ -52,7 +52,11 @@ export async function getFullStudentUser(request: Request) {
 
   const user = await getUserById(userId, {
     badgesEarned: true,
-    program: true,
+    program: {
+      include: {
+        courses: true,
+      },
+    },
     enrolledCourses: true,
     completedCourses: {
       include: {
