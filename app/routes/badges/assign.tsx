@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import StudentList from "./components/studentList";
 import BadgeList from "./components/badgeList";
-import { Form } from "@remix-run/react";
 import { ToastContainer, toast } from "react-toastify";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { getFullProfessorUser } from "~/session.server";
 import { UserType } from "@prisma/client";
+import { getProfessorStudents } from "~/models/user.server";
+import { json, redirect } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await getFullProfessorUser(request);
@@ -15,7 +16,13 @@ export async function loader({ request }: LoaderArgs) {
     return redirect("/login");
   }
   if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
-  return {};
+
+  const students = await getProfessorStudents(user.id);
+
+  console.log({ students });
+
+  // return {};
+  return json({ user, students });
 }
 
 export default function AssignBadge() {
@@ -36,6 +43,8 @@ export default function AssignBadge() {
     console.log(selectedStudents, selectedBadges);
     toast.success("Badge successfully assigned!");
   };
+
+  const { user, students } = useLoaderData();
 
   return (
     <Box className="h-full bg-gray-100" style={{ padding: "3%" }}>
@@ -65,7 +74,7 @@ export default function AssignBadge() {
           </Typography>
 
           <Box margin="auto">
-            <StudentList selectedStudent={selectedStudent} />
+            <StudentList selectedStudent={students} />
           </Box>
           <Box margin="auto">
             <BadgeList selectedBadge={selectedBadge} />

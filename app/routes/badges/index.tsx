@@ -1,6 +1,26 @@
 import { Link, Box, Button, Typography } from "@mui/material";
+// import { getProfessorStudents } from "~/models/user.server";
+// import { json, LoaderArgs, redirect } from "@remix-run/node";
+// import { getFullProfessorUser } from "~/session.server";
+// import { UserType, User, Course } from "@prisma/client";
+import { useLoaderData } from "@remix-run/react";
 
-export default function Competencies() {
+// export async function loader({ request }: LoaderArgs) {
+//   const user = await getFullProfessorUser(request);
+//   if (!user) {
+//     return redirect("/login");
+//   }
+
+//   const students = await getProfessorStudents(user.id);
+
+//   console.log({ students });
+
+//   if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
+//   return json({ user, students });
+// }
+
+export default function Badges() {
+  // const { user, students } = useLoaderData();
 
   return (
     <main
