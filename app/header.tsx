@@ -49,7 +49,7 @@ const HEADER_ITEMS = [
   { title: "Courses", link: "/courses" },
   { title: "Competencies", link: "/competencies" },
   { title: "Activities", link: "/activities" },
-  { title: "Badges", link: "/badges" },
+  { title: "Badges", link: "/badge" },
 ];
 const LoggedInHeaderItems = () => {
   return (
