@@ -1,4 +1,4 @@
-import { Link, Box, Typography } from "@mui/material";
+import { Link, Box, Button, Typography } from "@mui/material";
 
 export default function Competencies() {
 
@@ -17,11 +17,15 @@ export default function Competencies() {
     >
         <h1>Select Your Badge Action Below</h1>
         <Link href="/badges/create" className="text-white underline">
+          <Button variant="contained">
             Create Badge
+          </Button>
         </Link>
 
         <Link href="/badges/assign" className="text-white underline">
-          Assign Badge to Student
+          <Button variant="contained">
+            Assign Badge to Student
+          </Button>
         </Link>
 
     </Box>
