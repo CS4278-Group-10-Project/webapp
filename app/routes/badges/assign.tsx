@@ -7,6 +7,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { getFullProfessorUser } from "~/session.server";
 import { UserType } from "@prisma/client";
 import { getProfessorStudents } from "~/models/user.server";
+import { getBadges } from "~/models/badge.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
@@ -18,11 +19,12 @@ export async function loader({ request }: LoaderArgs) {
   if (user.accountType === UserType.STUDENT) return redirect("/dashboard");
 
   const students = await getProfessorStudents(user.id);
+  const badges = await getBadges(user);
 
   console.log({ students });
+  console.log({ badges});
 
-  // return {};
-  return json({ user, students });
+  return json({ user, students, badges });
 }
 
 export default function AssignBadge() {
@@ -44,7 +46,7 @@ export default function AssignBadge() {
     toast.success("Badge successfully assigned!");
   };
 
-  const { user, students } = useLoaderData();
+  const { students } = useLoaderData();
 
   return (
     <Box className="h-full bg-gray-100" style={{ padding: "3%" }}>
@@ -76,6 +78,7 @@ export default function AssignBadge() {
           <Box margin="auto">
             <StudentList selectedStudent={students} />
           </Box>
+
           <Box margin="auto">
             <BadgeList selectedBadge={selectedBadge} />
           </Box>
