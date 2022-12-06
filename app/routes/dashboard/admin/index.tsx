@@ -7,11 +7,12 @@ import { Box } from "@mui/material";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { getFullProfessorUser } from "~/session.server";
-import type { Program } from "@prisma/client";
+import type { Program, User } from "@prisma/client";
 import { UserType } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import { getAllUsers } from "~/models/user.server";
 import { getAllPrograms } from "~/models/program.server";
+import RegisteredUsers from "./components/registeredUsers";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await getFullProfessorUser(request);
@@ -31,7 +32,13 @@ export async function loader({ request }: LoaderArgs) {
   return json({ user, users, programs });
 }
 
-function ProfessorDashboardContent({ programs }: { programs: Program[] }) {
+function AdminDashboardContent({
+  programs,
+  users,
+}: {
+  programs: Program[];
+  users: User[];
+}) {
   return (
     <Box
       style={{
@@ -40,6 +47,7 @@ function ProfessorDashboardContent({ programs }: { programs: Program[] }) {
       gap={5}
     >
       <ProgramList title={"Current Programs"} programs={programs} />
+      <RegisteredUsers users={users} programs={programs} />
     </Box>
   );
 }
@@ -49,7 +57,7 @@ export default function ProfessorDashboard() {
   return (
     <main className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex">
       <Sidebar userInfo={<UserInfo user={user} />} list={<Overview />} />
-      <ProfessorDashboardContent programs={programs} />
+      <AdminDashboardContent programs={programs} users={users} />
     </main>
   );
 }

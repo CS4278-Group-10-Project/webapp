@@ -106,3 +106,33 @@ export async function getProfessorStudents(professorId: User["id"]) {
 export async function getAllUsers() {
   return prisma.user.findMany();
 }
+
+export async function updateUser({
+  id,
+  email,
+  firstName,
+  lastName,
+  bio,
+  accountType,
+  programId,
+}: {
+  id: User["id"];
+  email: User["email"];
+  firstName: User["firstName"];
+  lastName: User["lastName"];
+  bio: User["bio"];
+  accountType: User["accountType"];
+  programId: User["programId"];
+}) {
+  return prisma.user.update({
+    where: { id },
+    data: {
+      email,
+      firstName,
+      lastName,
+      bio,
+      accountType,
+      programId,
+    },
+  });
+}
