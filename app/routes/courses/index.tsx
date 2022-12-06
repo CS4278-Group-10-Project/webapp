@@ -4,7 +4,7 @@ import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { getAllCourses } from "~/models/course.server";
 import CourseCard from "~/routes/dashboard/components/courseCard";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Link } from "@mui/material";
 import { enroll } from "~/models/enroll.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -86,10 +86,16 @@ export default function EnrollStudents() {
 
   return (
     <main
-      className="sm:items-top sm:justify-left relative h-full min-h-screen items-stretch bg-white sm:flex"
+      className="sm:items-top sm:justify-left relative bg-white sm:flex"
       style={{ padding: "0 20px" }}
     >
       <Grid container spacing={1} mt={3}>
+        <Grid xs={12} ml={2}>
+          <Link href="/courses/create">
+            <Button variant="contained">Create A Course</Button>
+          </Link>
+        </Grid>
+
         {courses.map((course: any, key: any) => (
           <Grid item xs={6} md={2} key={key}>
             <EnrollCourseContent course={course} key={key} />

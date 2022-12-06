@@ -123,6 +123,9 @@ export async function loader({ request }: LoaderArgs) {
 
   if (user.accountType === UserType.PROFESSOR)
     return redirect("/dashboard/professor");
+  else if (user.accountType === UserType.ADMIN)
+    return redirect("/dashboard/admin");
+
   return json(user);
 }
 

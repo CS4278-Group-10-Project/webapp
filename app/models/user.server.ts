@@ -136,3 +136,11 @@ export async function updateUser({
     },
   });
 }
+
+export async function getAllProfessors() {
+  return prisma.user.findMany({
+    where: {
+      accountType: "PROFESSOR",
+    },
+  });
+}
