@@ -102,3 +102,7 @@ export async function getProfessorStudents(professorId: User["id"]) {
   });
   return students;
 }
+
+export async function getAllUsers() {
+  return prisma.user.findMany();
+}
