@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { useOptionalUser } from "./utils";
 import { Button, Link, styled } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import { User, UserType } from "@prisma/client";
 
 const HeaderItem = ({ title, link }: { title: string; link: string }) => {
   // get current path the page is on
@@ -46,18 +47,25 @@ const LogOutButton = () => {
 
 const HEADER_ITEMS = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Courses", link: "/courses" },
   { title: "Competencies", link: "/competencies" },
   { title: "Activities", link: "/activities" },
   { title: "Badges", link: "/badges" },
 ];
-const LoggedInHeaderItems = () => {
+const LoggedInHeaderItems = ({ user }: { user: User }) => {
   return (
     <>
       <Box sx={{ display: { xs: "none", sm: "block" } }}>
         {HEADER_ITEMS.map(({ title, link }) => (
           <HeaderItem title={title} link={link} key={title} />
         ))}
+
+        {user.accountType !== UserType.PROFESSOR && (
+          <HeaderItem title={"Courses"} link={"/courses"} key={"Courses"} />
+        )}
+
+        {user.accountType === UserType.ADMIN && (
+          <HeaderItem title={"Programs"} link={"/programs"} key={"Programs"} />
+        )}
 
         <LogOutButton />
       </Box>
@@ -82,7 +90,7 @@ export default function Header() {
     <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" component="nav">
         <Toolbar>
-          <Link href="/" style={{ flexGrow: "1" }}>
+          <Link href="/dashboard" style={{ flexGrow: "1" }}>
             <Typography
               variant="h6"
               component="div"
@@ -96,7 +104,11 @@ export default function Header() {
             </Typography>
           </Link>
 
-          {user ? <LoggedInHeaderItems /> : <LoggedOutHeaderItems />}
+          {user ? (
+            <LoggedInHeaderItems user={user} />
+          ) : (
+            <LoggedOutHeaderItems />
+          )}
         </Toolbar>
       </AppBar>
       <Offset />
