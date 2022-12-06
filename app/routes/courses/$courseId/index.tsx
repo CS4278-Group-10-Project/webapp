@@ -28,8 +28,8 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function Course() {
   const { course } = useLoaderData();
   return (
-    <Box className="h-full bg-gray-100" style={{ padding: "3%" }}>
-      <Paper
+    <Box className="h-full bg-gray-100" style={{ padding: "3%"}}>
+      <Paper elevation={3}
         style={{
           margin: "auto",
           padding: "5%",
@@ -37,38 +37,44 @@ export default function Course() {
       >
         <Typography
           margin="auto"
+          variant="overline"
+        >
+          Course Details
+        </Typography>
+
+        <Typography
+          margin="auto"
           variant="h4"
           component="h4"
-          fontFamily="Roboto"
         >
-          Name: {course.name}
+          {course.name}
         </Typography>
         <Typography
           margin="auto"
-          variant="h6"
           component="h4"
-          fontFamily="Roboto"
-        >
-          Description: {course.description}
-        </Typography>
-        <Typography
-          margin="auto"
-          variant="h6"
-          component="h4"
-          fontFamily="Roboto"
+          variant="overline"
         >
           Course Code: {course.courseCode}
         </Typography>
+
         <Typography
           margin="auto"
-          variant="h6"
           component="h4"
-          fontFamily="Roboto"
+          variant="overline"
         >
           Hours Needed :{" "}
           {course.hoursNeeded ??
-            "This course isn't satisfied with logged in hours"}
+            "This course does not require logging hours."}
         </Typography>
+
+        <Typography
+          margin="auto"
+          component="h4"
+          variant="h6"
+        >
+          {course.description}
+        </Typography>
+
       </Paper>
     </Box>
   );
